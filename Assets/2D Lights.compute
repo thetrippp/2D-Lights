@@ -1,0 +1,21 @@
+
+#pragma kernel SpotLights
+
+
+RWTexture2D<float4> LightTexture;
+float2 LightPosition;
+float maxLightDistance;
+
+[numthreads(4,4,1)]
+void SpotLights(uint3 id : SV_DispatchThreadID)
+{
+    float dist = distance(id.xy, LightPosition.xy);
+    float luminance = 1 / (dist * dist);
+    float normLum = dist / maxLightDistance;
+    float cutoffLum = 1 - (normLum * normLum * normLum * normLum);
+    
+    LightTexture[id.xy] = float4(cutoffLum, 0, 0, 0);
+}
+
+
+//StructuredBuffer<
