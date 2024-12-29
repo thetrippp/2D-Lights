@@ -1,4 +1,4 @@
-Shader "ButtonQuartet/LightShader"
+Shader "RaghavSuriyashekar/LightShader"
 {
     Properties
     {
@@ -10,6 +10,14 @@ Shader "ButtonQuartet/LightShader"
         
 	    ZWrite Off
 	    Blend SrcAlpha OneMinusSrcAlpha 
+
+
+        Stencil
+        {
+            Ref 0
+            Comp Equal
+            //Pass IncrSat
+        }
 
         Pass
         {
@@ -34,7 +42,10 @@ Shader "ButtonQuartet/LightShader"
 
             float4 baseColor;
             float intensity;
+            float fallOff;
             float maxAngle;
+            int useRadialFalloff;
+            int useAngularFalloff;
 
             float smoothstep(float edge0, float edge1, float x) 
             {
@@ -56,14 +67,18 @@ Shader "ButtonQuartet/LightShader"
                 float4 col = baseColor;
                 col *= intensity;
                 float dist = clamp(distance(i.uv, float2(0,0)), 0.0, 1.0);
-                float radF = pow(1.0 - dist, 2.0);
+                float radF = pow(1.0 - dist, fallOff);
 
                 float angle = atan2(i.uv.y, i.uv.x) * 57.29578;
                 float angF = 1 - smoothstep(0, maxAngle, abs(angle));
 
-                col *= radF * angF;
+                if(useRadialFalloff == 1)
+                col *= radF;
+                if(useAngularFalloff == 1)
+                col *= angF;
 
                 col.a = Luminance(float3(col.r, col.g, col.b));
+               
 
 
                 return col;

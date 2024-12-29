@@ -10,23 +10,30 @@ namespace ButtonQuartet.Lights
     [RequireComponent(typeof(MeshFilter))]
     public class PointLight2D : MonoBehaviour
     {
-        [Range(0.0f, 100.0f)]
+        [Range(0.0f, 10.0f)]
         public float baseIntensity = 0.5f;
+        [Range(0.1f, 10f)]
+        public float radialFallOff = 2f;
         public Color baseColor = Color.white;
         [Range(0f, 360f)]
         public float maxAngle;
+        public bool useRadialFalloff = true;
+        public bool useAngularFalloff = true;
 
         private MeshRenderer lightMeshRenderer;
         private MeshFilter lightMeshFilter;
-        public Mesh mesh;
+        private Mesh mesh;
 
-        public Shader lightShader;
-        public Material lightMaterial;
+        private Shader lightShader;
+        private Material lightMaterial;
+        public Material shadowMat;
 
         private void Awake()
         {
             lightMeshRenderer = GetComponent<MeshRenderer>();
             lightMeshFilter = GetComponent<MeshFilter>();
+
+            lightShader = Shader.Find("RaghavSuriyashekar/LightShader");
             lightMaterial = new Material(lightShader);
             lightMeshRenderer.material = lightMaterial;
         }
@@ -61,10 +68,13 @@ namespace ButtonQuartet.Lights
 
         void Update()
         {
-
+            shadowMat.SetVector("lightPosition", transform.position);
             lightMaterial.SetVector("baseColor", new Vector4(baseColor.r, baseColor.g, baseColor.b, baseColor.a));
             lightMaterial.SetFloat("intensity", baseIntensity);
+            lightMaterial.SetFloat("fallOff", radialFallOff);
             lightMaterial.SetFloat("maxAngle", maxAngle);
+            lightMaterial.SetInt("useRadialFalloff", useRadialFalloff ? 1 : 0);
+            lightMaterial.SetInt("useAngularFalloff", useAngularFalloff ? 1 : 0);
         }
     }
 }
