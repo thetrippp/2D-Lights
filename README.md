@@ -1,2 +1,2 @@
 # 2D-Lights
-2D Lights implementation based on Noel Berry's implementation in Celeste.
+2D Lights implementation based on Geometry Shaders, with some inspiration from Noel Berry's implementation of texture based lights in Celeste.
