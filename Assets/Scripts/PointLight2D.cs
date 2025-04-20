@@ -76,5 +76,15 @@ namespace ButtonQuartet.Lights
             lightMaterial.SetInt("useRadialFalloff", useRadialFalloff ? 1 : 0);
             lightMaterial.SetInt("useAngularFalloff", useAngularFalloff ? 1 : 0);
         }
+
+        private void OnGUI()
+        {
+            baseIntensity = GUI.HorizontalSlider(new Rect(25, 25, 300, 50), baseIntensity, 0.0f, 10.0f);
+            radialFallOff = GUI.HorizontalSlider(new Rect(25, 75, 300, 50), radialFallOff, 0.0f, 10.0f);
+            maxAngle = GUI.HorizontalSlider(new Rect(25, 125, 300, 50), maxAngle, 0.0f, 360.0f);
+
+            useRadialFalloff = GUI.Toggle(new Rect(25, 175, 300, 50), useRadialFalloff, "Use Radial Falloff : ");
+            useAngularFalloff = GUI.Toggle(new Rect(25, 225, 300, 50), useAngularFalloff, "Use Angular Falloff : ");
+        }
     }
 }
